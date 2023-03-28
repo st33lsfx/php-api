@@ -19,10 +19,10 @@ class AppFixtures extends Fixture
     {
         $user = new User();
         $user->setCreateAt(new \DateTimeImmutable('now'));
-        $user->setFirstName('Ondřej');
-        $user->setLastName('Němec');
-        $user->setEmail('ondra.nemec91@seznam.cz');
-        $user->setNick('ondrej.nemec');
+        $user->setFirstName('admin');
+        $user->setLastName('admin');
+        $user->setEmail('admin@test.cz');
+        $user->setNick('admin');
         $password = $this->hasher->hashPassword($user, 'admin');
         $user->setPassword($password);
         $user->setRoles(['ROLE_ADMIN']);
