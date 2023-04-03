@@ -14,7 +14,6 @@ class UserService
 
         $newUser->setFirstName($userModel->firstName);
         $newUser->setLastName($userModel->lastName);
-        $newUser->setEmail($userModel->email);
         $newUser->setNick($userModel->nick);
         $newUser->setPassword($userModel->password);
 

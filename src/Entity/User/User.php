@@ -2,7 +2,10 @@
 
 namespace App\Entity\User;
 
+use App\Entity\Followers\Followers;
 use App\Repository\User\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -17,29 +20,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'CUSTOM')]
     #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
-    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\Column(type: 'uuid', unique: true, nullable: false)]
     private string $id;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: false)]
     private \DateTimeImmutable $createAt;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     private string $firstName;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 180)]
-    private string $email;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $nick;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nick = null;
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: false)]
     private string $password;
 
-    #[ORM\Column(type: Types::JSON)]
+    #[ORM\Column(type: Types::JSON, nullable: false)]
     private array $roles = [];
+
+    #[ORM\OneToMany(mappedBy: 'Follow', targetEntity: Followers::class)]
+    private Collection $followers;
+
+    #[ORM\OneToMany(mappedBy: 'Follower', targetEntity: Followers::class)]
+    private Collection $FollowedBy;
+
+    public function __construct()
+    {
+        $this->followers = new ArrayCollection();
+        $this->FollowedBy = new ArrayCollection();
+    }
 
     public function getId(): string
     {
@@ -76,17 +88,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->lastName = $lastName;
     }
 
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    public function getNick(): ?string
+    public function getNick(): string
     {
         return $this->nick;
     }
@@ -122,7 +124,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->nick;
     }
 
     /**
@@ -133,4 +135,41 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    /**
+     * @return Collection<int, Followers>
+     */
+    public function getFollowers(): Collection
+    {
+        return $this->followers;
+    }
+
+    public function addFollower(Followers $follower): void
+    {
+        $this->getFollowers()->add($follower);
+    }
+
+    public function removeFollower(Followers $follower): void
+    {
+        $this->getFollowers()->remove($follower);
+    }
+
+    /**
+     * @return Collection<int, Followers>
+     */
+    public function getFollowedBy(): Collection
+    {
+        return $this->FollowedBy;
+    }
+
+    public function addFollowedBy(Followers $followedBy): void
+    {
+        $this->getFollowedBy()->add($followedBy);
+    }
+
+    public function removeFollowedBy(Followers $followedBy): void
+    {
+        $this->getFollowedBy()->remove($followedBy);
+    }
+
 }

@@ -36,13 +36,6 @@ class CreateUserType extends AbstractType
                 ]
             )
             ->add(
-                'email',
-                TextType::class,
-                [
-                    'label' => 'Email'
-                ]
-            )
-            ->add(
                 'password',
                 TextType::class,
                 [
