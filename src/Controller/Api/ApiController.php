@@ -8,6 +8,7 @@ use App\Service\User\UserService;
 use App\Form\User\CreateUserType;
 use App\Model\User\UserModel;
 use App\Repository\User\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -58,7 +59,8 @@ class ApiController extends AbstractController
 
         if ($form->isValid()) {
             try {
-                $this->userService->createUser($newUserModel);
+               $newUser = $this->userService->createUser($newUserModel);
+               $this->userRepository->save($newUser, true);
             } catch (\Exception $exception) {
                 return $this->responseService->createFalseResponse($exception->getMessage());
             }
