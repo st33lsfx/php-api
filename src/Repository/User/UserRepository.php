@@ -3,6 +3,7 @@
 namespace App\Repository\User;
 
 use App\Entity\User\User;
+use App\Model\User\UserFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -37,6 +38,21 @@ class UserRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getUsersByFilter(UserFilter $filter): array
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->setFirstResult($filter->getPage())
+            ->setMaxResults($filter->getLimit());
+
+        if ($filter->getSortByNick()) {
+            $qb->orderBy('u.nick', $filter->getSortDirection());
+        } else {
+            $qb->orderBy('u.id', $filter->getSortDirection());
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
 //    /**

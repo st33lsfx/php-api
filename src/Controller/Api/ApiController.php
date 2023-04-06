@@ -3,6 +3,8 @@
 namespace App\Controller\Api;
 
 use App\Entity\User\User;
+use App\Form\User\UserFilterType;
+use App\Model\User\UserFilter;
 use App\Service\ResponseService;
 use App\Service\User\UserService;
 use App\Form\User\CreateUserType;
@@ -33,7 +35,7 @@ class ApiController extends AbstractController
     }
 
     #[Route('/api/user/all', name: 'app_user_list', methods: ['GET'])]
-    public function userList(): JsonResponse
+    public function userListAll(): JsonResponse
     {
         $users = $this->userRepository->findAll();
         $userSerialized = $this->serializer->serialize($users, 'json');
@@ -61,6 +63,23 @@ class ApiController extends AbstractController
             try {
                $newUser = $this->userService->createUser($newUserModel);
                $this->userRepository->save($newUser, true);
+            } catch (\Exception $exception) {
+                return $this->responseService->createFalseResponse($exception->getMessage());
+            }
+        }
+        return $this->responseService->createTrueResponse();
+    }
+
+    #[Route('api/user', name: 'app_user_create', methods: ['GET'])]
+    public function userList(Request $request): Response
+    {
+        $userFilter = new UserFilter();
+        $form = $this->createForm(UserFilterType::class, $userFilter);
+        $form->submit($request->request->all());
+
+        if ($form->isValid()) {
+            try {
+                $this->userRepository->getUsersByFilter($userFilter);
             } catch (\Exception $exception) {
                 return $this->responseService->createFalseResponse($exception->getMessage());
             }

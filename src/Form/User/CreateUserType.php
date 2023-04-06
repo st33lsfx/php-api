@@ -48,6 +48,7 @@ class CreateUserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UserModel::class,
+            'csrf_protection' => false,
         ]);
     }
 }
