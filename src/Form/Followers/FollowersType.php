@@ -3,6 +3,7 @@
 namespace App\Form\Followers;
 
 use App\Entity\User\User;
+use App\Model\User\UserModel;
 use App\Repository\User\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;

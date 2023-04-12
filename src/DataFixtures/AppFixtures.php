@@ -22,6 +22,15 @@ class AppFixtures extends Fixture
 
         $users = [];
 
+        $admin = new User();
+        $admin->setFirstName('Admin');
+        $admin->setLastName('User');
+        $admin->setNick('admin');
+        $admin->setPassword($this->hasher->hashPassword($admin, 'admin'));
+        $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setCreateAt(new \DateTimeImmutable('now'));
+        $manager->persist($admin);
+
         for ($i = 1; $i <= 50; $i++) {
             $user = new User();
             $user->setFirstName('user' . $i);

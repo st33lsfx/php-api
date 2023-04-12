@@ -16,7 +16,7 @@ class Followers
     private int $id;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: false)]
-    private \DateTimeInterface $createAt;
+    private \DateTimeImmutable $createAt;
 
     #[ORM\ManyToOne(inversedBy: 'followers')]
     private ?User $Follow = null;
@@ -29,12 +29,12 @@ class Followers
         return $this->id;
     }
 
-    public function getCreateAt(): \DateTimeInterface
+    public function getCreateAt(): \DateTimeImmutable
     {
         return $this->createAt;
     }
 
-    public function setCreateAt(\DateTimeInterface $createAt): void
+    public function setCreateAt(\DateTimeImmutable $createAt): void
     {
         $this->createAt = $createAt;
 

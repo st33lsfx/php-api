@@ -33,4 +33,10 @@ class ResponseService
 
         return new JsonResponse($response, $httpCode);
     }
+
+    public function createResponse($data): JsonResponse
+    {
+        $serializedData = $this->serializer->serialize($data, 'json');
+        return new JsonResponse($serializedData,Response::HTTP_OK, [], true);
+    }
 }
