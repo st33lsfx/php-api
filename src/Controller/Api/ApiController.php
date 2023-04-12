@@ -4,15 +4,12 @@ namespace App\Controller\Api;
 
 use App\Entity\Followers\Followers;
 use App\Entity\User\User;
-use App\Form\User\UserFilterType;
 use App\Model\User\UserFilter;
 use App\Repository\Followers\FollowersRepository;
 use App\Service\ResponseService;
 use App\Service\User\UserService;
-use App\Form\User\CreateUserType;
 use App\Model\User\UserModel;
 use App\Repository\User\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,7 +69,7 @@ class ApiController extends AbstractController
     }
 
     #[Route('/api/user/{id}/follow', name: 'app_follow_user', methods: ['PATCH'])]
-    public function followUser(Request $request, string $id, UserRepository $userRepository): JsonResponse
+    public function followUser(string $id, UserRepository $userRepository): JsonResponse
     {
         $currentUser = $this->getUser();
 
