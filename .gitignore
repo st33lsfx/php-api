@@ -8,6 +8,7 @@
 /var/
 /vendor/
 .idea
+/.docker/data/*
 ###< symfony/framework-bundle ###
 
 ###> lexik/jwt-authentication-bundle ###
