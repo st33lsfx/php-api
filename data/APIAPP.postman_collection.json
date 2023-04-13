@@ -19,7 +19,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"username\":\"admin\",\n    \"password\":\"admin\"\n}",
+					"raw": "{\n    \"nick\":\"admin\",\n    \"password\":\"admin\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -153,7 +153,7 @@
 					}
 				],
 				"url": {
-					"raw": "localhost/api/user/<user-id>/follower-list?page=1&sortByColumn=nick&sortDirection=DESC",
+					"raw": "localhost/api/user/<user-id>/followers",
 					"host": [
 						"localhost"
 					],
@@ -161,21 +161,7 @@
 						"api",
 						"user",
 						"<user-id>",
-						"follower-list"
-					],
-					"query": [
-						{
-							"key": "page",
-							"value": "1"
-						},
-						{
-							"key": "sortByColumn",
-							"value": "nick"
-						},
-						{
-							"key": "sortDirection",
-							"value": "DESC"
-						}
+						"followers"
 					]
 				}
 			},
@@ -207,7 +193,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"firstName\":\"Jakub\",\n    \"lastName\":\"Urbis\",\n    \"nick\": \"urbi21\",\n    \"password\": \"urbi123\"\n}",
+					"raw": "{\n    \"firstName\":\"Testovaci\",\n    \"lastName\":\"Uzivatel\",\n    \"nick\": \"testUser\",\n    \"password\": \"test\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"

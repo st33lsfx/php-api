@@ -16,25 +16,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class ApiController extends AbstractController
 {
-    private SerializerInterface $serializer;
     private UserRepository $userRepository;
     private ResponseService $responseService;
     private UserService $userService;
     private FollowersRepository $followersRepository;
 
     public function __construct(
-        SerializerInterface $serializer,
         UserRepository $userRepository,
         ResponseService $responseService,
         UserService $userService,
         FollowersRepository $followersRepository
     )
     {
-        $this->serializer = $serializer;
         $this->userRepository = $userRepository;
         $this->responseService = $responseService;
         $this->userService = $userService;
@@ -174,7 +170,7 @@ class ApiController extends AbstractController
         }
     }
 
-    #[Route('api/{id}/delete', name: 'app_user_delete', methods: ['DELETE'])]
+    #[Route('api/user/{id}/delete', name: 'app_user_delete', methods: ['DELETE'])]
     #[IsGranted("ROLE_ADMIN")]
     public function deleteUser(User $user): Response
     {
