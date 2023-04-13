@@ -20,7 +20,7 @@ class ResponseService
         return new JsonResponse(['ok' => true]);
     }
 
-    public function createFalseResponse(string $message, int $httpCode = Response::HTTP_INTERNAL_SERVER_ERROR, array $errors = null): JsonResponse
+    public function createFalseResponse(string $message, int $httpCode = Response::HTTP_BAD_REQUEST, array $errors = null): JsonResponse
     {
         $response = [
             "ok" => false,

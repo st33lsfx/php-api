@@ -43,16 +43,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::JSON, nullable: false)]
     private array $roles = [];
 
-    #[ORM\OneToMany(mappedBy: 'Follow', targetEntity: Followers::class)]
+    #[ORM\OneToMany(mappedBy: 'Follow', targetEntity: Followers::class, cascade: ['remove'], orphanRemoval: true)]
     private Collection $followers;
 
-    #[ORM\OneToMany(mappedBy: 'Follower', targetEntity: Followers::class)]
+    #[ORM\OneToMany(mappedBy: 'Follower', targetEntity: Followers::class, cascade: ['remove'], orphanRemoval: true)]
     private Collection $FollowedBy;
 
     public function __construct()
     {
         $this->followers = new ArrayCollection();
         $this->FollowedBy = new ArrayCollection();
+        $this->createAt = new \DateTimeImmutable();
     }
 
     public function getId(): string

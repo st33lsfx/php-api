@@ -8,11 +8,6 @@ use App\Repository\User\UserRepository;
 
 class UserService
 {
-    private UserRepository $userRepository;
-
-    public function __construct(UserRepository $userRepository)
-    {
-    }
 
     public function createUser(UserModel $userModel): User
     {

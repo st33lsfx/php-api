@@ -26,7 +26,13 @@ class ApiController extends AbstractController
     private UserService $userService;
     private FollowersRepository $followersRepository;
 
-    public function __construct(SerializerInterface $serializer, UserRepository $userRepository, ResponseService $responseService, UserService $userService, FollowersRepository $followersRepository)
+    public function __construct(
+        SerializerInterface $serializer,
+        UserRepository $userRepository,
+        ResponseService $responseService,
+        UserService $userService,
+        FollowersRepository $followersRepository
+    )
     {
         $this->serializer = $serializer;
         $this->userRepository = $userRepository;
@@ -61,7 +67,32 @@ class ApiController extends AbstractController
             ];
         }
 
-        if ($response){
+        if ($response) {
+            return $this->responseService->createResponse($response);
+        }
+
+        return $this->responseService->createFalseResponse('Bad request');
+    }
+
+    #[Route('/api/user/{id}', name: 'app_user_detail', methods: ['GET'])]
+    public function userDetail(string $id): JsonResponse
+    {
+        $user = $this->userRepository->findOneBy(['id' => $id]);
+
+        if (!$user) {
+            return $this->responseService->createFalseResponse('User not found', Response::HTTP_NOT_FOUND);
+        }
+
+        $response = [
+            'id' => $user->getId(),
+            'first_name' => $user->getFirstName(),
+            'last_name' => $user->getLastName(),
+            'nick' => $user->getNick(),
+            'count_followers' => $user->getFollowers()->count(),
+            'created_at' => $user->getCreateAt(),
+        ];
+
+        if ($response) {
             return $this->responseService->createResponse($response);
         }
 
@@ -76,7 +107,7 @@ class ApiController extends AbstractController
         $userToFollow = $userRepository->find($id);
 
         if (!$userToFollow) {
-            return $this->responseService->createFalseResponse('User not found', 404);
+            return $this->responseService->createFalseResponse('User not found', Response::HTTP_NOT_FOUND);
         }
 
         if ($currentUser !== $userToFollow) {
@@ -88,7 +119,7 @@ class ApiController extends AbstractController
 
             $this->followersRepository->save($followers, true);
 
-            return $this->responseService->createResponse(['success' => true]);
+            return $this->responseService->createTrueResponse();
         }
 
         return $this->responseService->createFalseResponse('You cannot follow yourself');
@@ -100,7 +131,7 @@ class ApiController extends AbstractController
         $user = $this->userRepository->findOneBy(['id' => $id]);
 
         if (!$user) {
-            return $this->responseService->createFalseResponse('User not found');
+            return $this->responseService->createFalseResponse('User not found', Response::HTTP_NOT_FOUND);
         }
 
         $followers = $user->getFollowers();
@@ -125,7 +156,7 @@ class ApiController extends AbstractController
 
     #[Route('api/user/create', name: 'app_user_create', methods: ['PUT'])]
     #[IsGranted("ROLE_ADMIN")]
-    public function create(Request $request): Response
+    public function createUser(Request $request): Response
     {
         $newUserModel = new UserModel();
         $data = json_decode($request->getContent(), true);
@@ -145,7 +176,7 @@ class ApiController extends AbstractController
 
     #[Route('api/{id}/delete', name: 'app_user_delete', methods: ['DELETE'])]
     #[IsGranted("ROLE_ADMIN")]
-    public function delete(User $user): Response
+    public function deleteUser(User $user): Response
     {
 
         try {
