@@ -1,0 +1,311 @@
+{
+	"info": {
+		"_postman_id": "059550a3-5e58-4606-bf74-f5fd9d2b8cda",
+		"name": "APIAPP",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13602217"
+	},
+	"item": [
+		{
+			"name": "login_check",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\":\"admin\",\n    \"password\":\"admin\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/api/login_check",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"api",
+						"login_check"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user detail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "<change-token>",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost/api/user/<user-id>",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"<user-id>"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user all",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2ODEyNDU4MDIsImV4cCI6MTY4MTI0OTQwMiwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImFkbWluIn0.P1ES8jR0txetagaISm2GcbgK9giCqSojt893TIKGMnWxzYCdCBBx_Yg4VIgOMwF3kjRGX_h_cEW9ykSSvHrKOLxoilDVEkNJgYM35e3t7d9k1LehWl3Vxe6yeozttYRHcoS3e26NcKAwEZ3xadEq_3u_rLVv31fi4cH-zB61WlMAue38nwYAiSU-y_XhX6ix31MuQZDFfAw8jMSYEuwkOcraKrkvVXcDvU5jK7DKHSZ9iZ30ncJH6WGQebHAMKoM1oHMWAxYUy48Tm4k8hu4GxnJ5zdFxYXDLGThSICUAZLVZ-QvTBI2vkaO5adUPNqcP1Ayv8t1rVxntsGc33ViFQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"page\":1,\n    \"limit\":10,\n    \"sortByNick\": true,\n    \"sortDirection\": \"ASC\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/api/user/all",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"all"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "list followers of user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "<change-token>",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost/api/user/<user-id>/follower-list?page=1&sortByColumn=nick&sortDirection=DESC",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"<user-id>",
+						"follower-list"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "sortByColumn",
+							"value": "nick"
+						},
+						{
+							"key": "sortDirection",
+							"value": "DESC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJpYXQiOjE2ODEyNDU4MDIsImV4cCI6MTY4MTI0OTQwMiwicm9sZXMiOlsiUk9MRV9BRE1JTiIsIlJPTEVfVVNFUiJdLCJ1c2VybmFtZSI6ImFkbWluIn0.P1ES8jR0txetagaISm2GcbgK9giCqSojt893TIKGMnWxzYCdCBBx_Yg4VIgOMwF3kjRGX_h_cEW9ykSSvHrKOLxoilDVEkNJgYM35e3t7d9k1LehWl3Vxe6yeozttYRHcoS3e26NcKAwEZ3xadEq_3u_rLVv31fi4cH-zB61WlMAue38nwYAiSU-y_XhX6ix31MuQZDFfAw8jMSYEuwkOcraKrkvVXcDvU5jK7DKHSZ9iZ30ncJH6WGQebHAMKoM1oHMWAxYUy48Tm4k8hu4GxnJ5zdFxYXDLGThSICUAZLVZ-QvTBI2vkaO5adUPNqcP1Ayv8t1rVxntsGc33ViFQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"firstName\":\"Jakub\",\n    \"lastName\":\"Urbis\",\n    \"nick\": \"urbi21\",\n    \"password\": \"urbi123\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost/api/user/create",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"create"
+					],
+					"query": [
+						{
+							"key": "firstName",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "<change-token>",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost/api/user/<user-id>/delete",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"<user-id>",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user follow another user",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "<change-token>",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost/api/user/<user-id>/follow",
+					"host": [
+						"localhost"
+					],
+					"path": [
+						"api",
+						"user",
+						"<user-id>",
+						"follow"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
