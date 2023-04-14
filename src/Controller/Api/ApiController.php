@@ -4,6 +4,8 @@ namespace App\Controller\Api;
 
 use App\Entity\Followers\Followers;
 use App\Entity\User\User;
+use App\Form\User\CreateUserType;
+use App\Form\User\UserFilterType;
 use App\Model\User\UserFilter;
 use App\Repository\Followers\FollowersRepository;
 use App\Service\ResponseService;
@@ -16,58 +18,51 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ApiController extends AbstractController
 {
+    private SerializerInterface $serializer;
     private UserRepository $userRepository;
     private ResponseService $responseService;
     private UserService $userService;
     private FollowersRepository $followersRepository;
 
     public function __construct(
+        SerializerInterface $serializer,
         UserRepository $userRepository,
         ResponseService $responseService,
         UserService $userService,
         FollowersRepository $followersRepository
     )
     {
+        $this->serializer = $serializer;
         $this->userRepository = $userRepository;
         $this->responseService = $responseService;
         $this->userService = $userService;
         $this->followersRepository = $followersRepository;
     }
 
-    #[Route('/api/user/all', name: 'app_user_list', methods: ['GET'])]
+    #[Route('api/user/all', name: 'app_user_list', methods: ['GET'])]
     public function userListAll(Request $request): JsonResponse
     {
         $userFilter = new UserFilter();
-        $data = json_decode($request->getContent(), true);
+        $form = $this->createForm(UserFilterType::class, $userFilter);
+        $form->submit($request->query->all());
+        dd($request->query->all());
 
-        $userFilter->setPage($data["page"]);
-        $userFilter->setLimit($data["limit"]);
-        $userFilter->setSortByNick($data["sortByNick"]);
-        $userFilter->setSortDirection($data["sortDirection"]);
-
-        $users = $this->userRepository->getUsersByFilter($userFilter);
-
-        $response = [];
-
-        foreach ($users as $user) {
-            $response[] = [
-                'id' => $user->getId(),
-                'first_name' => $user->getFirstName(),
-                'last_name' => $user->getLastName(),
-                'nick' => $user->getNick(),
-                'count_followers' => $user->getFollowers()->count(),
-                'created_at' => $user->getCreateAt(),
-            ];
+        if ($form->isValid()) {
+            try {
+                $users = $this->userRepository->getUsersByFilter($userFilter);
+            } catch (\Exception $exception) {
+                return $this->responseService->createFalseResponse($exception->getMessage());
+            }
+        } else {
+            $users = $this->userRepository->findAll();
         }
 
-        if ($response) {
-            return $this->responseService->createResponse($response);
-        }
-
-        return $this->responseService->createFalseResponse('Bad request');
+        $userSerialized = $this->serializer->serialize($users, 'json');
+        return new JsonResponse($userSerialized, 200, [], true);
     }
 
     #[Route('/api/user/{id}', name: 'app_user_detail', methods: ['GET'])]
@@ -152,22 +147,21 @@ class ApiController extends AbstractController
 
     #[Route('api/user/create', name: 'app_user_create', methods: ['PUT'])]
     #[IsGranted("ROLE_ADMIN")]
-    public function createUser(Request $request): Response
+    public function create(Request $request): Response
     {
         $newUserModel = new UserModel();
-        $data = json_decode($request->getContent(), true);
-        $newUserModel->firstName = $data['firstName'];
-        $newUserModel->lastName = $data['lastName'];
-        $newUserModel->nick = $data['nick'];
-        $newUserModel->password = $data['password'];
+        $form = $this->createForm(CreateUserType::class, $newUserModel);
+        $form->submit($request->request->all());
 
-        try {
-            $newUser = $this->userService->createUser($newUserModel);
-            $this->userRepository->save($newUser, true);
-            return $this->responseService->createTrueResponse();
-        } catch (\Exception $exception) {
-            return $this->responseService->createFalseResponse($exception->getMessage());
+        if ($form->isValid()) {
+            try {
+                $newUser = $this->userService->createUser($newUserModel);
+                $this->userRepository->save($newUser, true);
+            } catch (\Exception $exception) {
+                return $this->responseService->createFalseResponse($exception->getMessage());
+            }
         }
+        return $this->responseService->createTrueResponse();
     }
 
     #[Route('api/user/{id}/delete', name: 'app_user_delete', methods: ['DELETE'])]

@@ -8,7 +8,7 @@ class UserModel
 {
     #[Assert\NotBlank()]
     public string $firstName;
-    public ?string $lastName = null;
+    public string $lastName;
     #[Assert\NotBlank()]
     public string $nick;
 
